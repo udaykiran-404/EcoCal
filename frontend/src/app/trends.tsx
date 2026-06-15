@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, View, ScrollView, Pressable, ActivityIndicator, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '@/context/AppContext';
@@ -19,14 +19,14 @@ interface HistoryItem {
 }
 
 export default function TrendsScreen() {
-  const { apiGet, apiPost, dashboardData, isLoading: isDashboardLoading, isAuthenticated, isLoading: isAuthLoading } = useApp();
+  const { apiGet, apiPost, dashboardData, isAuthenticated, isLoading } = useApp();
   const theme = useTheme();
   
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [activeTab, setActiveTab] = useState<'chart' | 'calendar' | 'logs'>('chart');
 
-  const loadHistory = async () => {
+  const loadHistory = useCallback(async () => {
     setIsLoadingHistory(true);
     try {
       const data = await apiGet('/history');
@@ -36,13 +36,16 @@ export default function TrendsScreen() {
     } finally {
       setIsLoadingHistory(false);
     }
-  };
+  }, [apiGet]);
 
   useEffect(() => {
     if (isAuthenticated) {
-      loadHistory();
+      const t = setTimeout(() => {
+        loadHistory();
+      }, 0);
+      return () => clearTimeout(t);
     }
-  }, [dashboardData, isAuthenticated]);
+  }, [dashboardData, isAuthenticated, loadHistory]);
 
   // --- Calendar states ---
   const [currentMonthYear, setCurrentMonthYear] = useState(new Date());
@@ -59,7 +62,7 @@ export default function TrendsScreen() {
   const [backfillShopping, setBackfillShopping] = useState('');
   const [isSavingBackfill, setIsSavingBackfill] = useState(false);
 
-  const loadCalendar = async (monthStr: string) => {
+  const loadCalendar = useCallback(async (monthStr: string) => {
     setIsCalendarLoading(true);
     try {
       const data = await apiGet(`/calendar?month=${monthStr}`);
@@ -69,14 +72,17 @@ export default function TrendsScreen() {
     } finally {
       setIsCalendarLoading(false);
     }
-  };
+  }, [apiGet]);
 
   useEffect(() => {
     if (activeTab === 'calendar' && isAuthenticated) {
       const monthStr = `${currentMonthYear.getFullYear()}-${String(currentMonthYear.getMonth() + 1).padStart(2, '0')}`;
-      loadCalendar(monthStr);
+      const t = setTimeout(() => {
+        loadCalendar(monthStr);
+      }, 0);
+      return () => clearTimeout(t);
     }
-  }, [currentMonthYear, activeTab, isAuthenticated, dashboardData]);
+  }, [currentMonthYear, activeTab, isAuthenticated, dashboardData, loadCalendar]);
 
   const handlePrevMonth = () => {
     const d = new Date(currentMonthYear.getFullYear(), currentMonthYear.getMonth() - 1, 1);
@@ -151,7 +157,7 @@ export default function TrendsScreen() {
     }
   };
 
-  if (isAuthLoading) {
+  if (isLoading) {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color="#2e7d32" />
@@ -168,7 +174,7 @@ export default function TrendsScreen() {
     );
   }
 
-  if (isDashboardLoading || !dashboardData) {
+  if (isLoading || !dashboardData) {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color="#2e7d32" />

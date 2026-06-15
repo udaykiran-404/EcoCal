@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, ScrollView, Pressable, ActivityIndicator, Image } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { StyleSheet, View, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '@/context/AppContext';
 import { useTheme } from '@/hooks/use-theme';
@@ -16,7 +16,7 @@ interface Goal {
   ends_at: string;
   status: 'active' | 'completed' | 'failed';
   created_at: string;
-  progress: Array<{ log_date: string; completed: boolean }>;
+  progress: { log_date: string; completed: boolean }[];
 }
 
 const AVAILABLE_GOALS = [
@@ -62,7 +62,7 @@ export default function GoalsScreen() {
   const [isActionLoading, setIsActionLoading] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'active' | 'discover'>('active');
 
-  const loadGoals = async () => {
+  const loadGoals = useCallback(async () => {
     setIsLoading(true);
     try {
       const data = await apiGet('/goals');
@@ -72,13 +72,16 @@ export default function GoalsScreen() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [apiGet]);
 
   useEffect(() => {
     if (isAuthenticated) {
-      loadGoals();
+      const t = setTimeout(() => {
+        loadGoals();
+      }, 0);
+      return () => clearTimeout(t);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, loadGoals]);
 
   if (isAuthLoading) {
     return (
@@ -195,7 +198,6 @@ export default function GoalsScreen() {
   };
 
   const activeGoals = goals.filter(g => g.status === 'active');
-  const completedGoals = goals.filter(g => g.status === 'completed' || g.status === 'failed');
 
   return (
     <ScrollView style={[styles.scrollView, { backgroundColor: theme.background }]} contentContainerStyle={styles.container}>
@@ -314,7 +316,7 @@ export default function GoalsScreen() {
                   {(goal.goal_type === 'walk_cycle_5km' || goal.goal_type === 'plastic_free_week') && (
                     <View style={styles.interactiveBlock}>
                       <ThemedText type="smallBold" style={{ fontSize: 12, color: '#2e7d32' }}>
-                        Log Today's Challenge Progress
+                        {"Log Today's Challenge Progress"}
                       </ThemedText>
                       
                       {/* We show log check buttons for the current day */}

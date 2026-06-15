@@ -131,7 +131,7 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
       {renderStepIndicator()}
 
       {step === 1 && (
@@ -434,7 +434,7 @@ export default function OnboardingScreen() {
           >
             <ThemedText style={styles.cardIcon}>🤷‍♂️</ThemedText>
             <View style={{ flex: 1 }}>
-              <ThemedText type="smallBold">I'm not sure / Don't use LPG</ThemedText>
+              <ThemedText type="smallBold">{"I'm not sure / Don't use LPG"}</ThemedText>
             </View>
             <View style={[styles.checkbox, lpgNotSure && styles.checkboxChecked]} />
           </Pressable>
@@ -514,7 +514,7 @@ export default function OnboardingScreen() {
           </ThemedText>
 
           <ThemedText type="small" themeColor="textSecondary" style={styles.equivalencyContext}>
-            We've set this as your start baseline. Don't worry, we'll suggest small, actionable changes to bring this down together!
+            {"We've set this as your start baseline. Don't worry, we'll suggest small, actionable changes to bring this down together!"}
           </ThemedText>
         </ThemedView>
       )}
@@ -543,7 +543,7 @@ export default function OnboardingScreen() {
           </Pressable>
         ) : (
           <Pressable style={styles.goButton} onPress={completeOnboarding}>
-            <ThemedText type="smallBold" style={styles.goButtonText}>Let's Go!</ThemedText>
+            <ThemedText type="smallBold" style={styles.goButtonText}>{"Let's Go!"}</ThemedText>
           </Pressable>
         )}
       </View>
@@ -555,6 +555,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: Spacing.four,
+    paddingBottom: 100,
     justifyContent: 'center',
     maxWidth: 480,
     alignSelf: 'center',
@@ -791,5 +792,9 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     opacity: 0.7,
+  },
+  scrollView: {
+    flex: 1,
+    width: '100%',
   },
 });

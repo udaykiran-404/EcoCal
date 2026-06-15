@@ -12,7 +12,7 @@ export default function LogScreen() {
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <CaptureFlow initialType={initialType} />
+        <CaptureFlow key={initialType} initialType={initialType} />
       </SafeAreaView>
     </ThemedView>
   );

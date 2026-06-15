@@ -7,8 +7,7 @@ import {
   query, 
   where, 
   getDocs, 
-  updateDoc,
-  deleteDoc
+  updateDoc
 } from 'firebase/firestore';
 import { EMISSION_FACTORS } from '../constants/emissionFactors';
 import { groqService } from './groqService';

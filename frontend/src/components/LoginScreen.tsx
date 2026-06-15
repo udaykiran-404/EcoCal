@@ -169,7 +169,7 @@ export default function LoginScreen() {
               
               <Pressable onPress={toggleAuthMode} disabled={isLoading} style={styles.toggleLink}>
                 <ThemedText type="linkPrimary" style={{ textAlign: 'center' }}>
-                  Don't have an account? Register here
+                  {"Don't have an account? Register here"}
                 </ThemedText>
               </Pressable>
             </View>

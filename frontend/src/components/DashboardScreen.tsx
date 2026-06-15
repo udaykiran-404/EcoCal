@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Pressable, ActivityIndicator, Dimensions, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, ScrollView, Pressable, ActivityIndicator, TextInput } from 'react-native';
 import { useApp } from '../context/AppContext';
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
@@ -13,39 +13,24 @@ interface DashboardScreenProps {
 
 export default function DashboardScreen({ onTriggerCheckin, onNavigateToLog }: DashboardScreenProps) {
   const { dashboardData, isLoading, fetchDashboard, logout, apiPost } = useApp();
-  const [activeEquivalent, setActiveEquivalent] = useState<'trees' | 'petrol' | 'money'>('trees');
-  const [localBreakfast, setLocalBreakfast] = useState<string | null>(null);
-  const [localLunch, setLocalLunch] = useState<string | null>(null);
-  const [localDinner, setLocalDinner] = useState<string | null>(null);
-  const [localTravel, setLocalTravel] = useState('');
-  const [localShopping, setLocalShopping] = useState('');
-  const [isConcluding, setIsConcluding] = useState(false);
-  const [activeTravelSaved, setActiveTravelSaved] = useState(false);
-  const [activeShoppingSaved, setActiveShoppingSaved] = useState(false);
-
   const todayLog = dashboardData?.todayLog || {};
-
-  useEffect(() => {
-    if (todayLog) {
-      setLocalBreakfast(todayLog.breakfast_meal || null);
-      setLocalLunch(todayLog.lunch_meal || null);
-      setLocalDinner(todayLog.dinner_meal || null);
-      if (todayLog.travel_km !== undefined && todayLog.travel_km !== null) {
-        setLocalTravel(String(todayLog.travel_km));
-        setActiveTravelSaved(true);
-      } else {
-        setLocalTravel('');
-        setActiveTravelSaved(false);
-      }
-      if (todayLog.shopping_amount !== undefined && todayLog.shopping_amount !== null) {
-        setLocalShopping(String(todayLog.shopping_amount));
-        setActiveShoppingSaved(true);
-      } else {
-        setLocalShopping('');
-        setActiveShoppingSaved(false);
-      }
-    }
-  }, [dashboardData]);
+  const [activeEquivalent, setActiveEquivalent] = useState<'trees' | 'petrol' | 'money'>('trees');
+  const [localBreakfast, setLocalBreakfast] = useState<string | null>(todayLog.breakfast_meal || null);
+  const [localLunch, setLocalLunch] = useState<string | null>(todayLog.lunch_meal || null);
+  const [localDinner, setLocalDinner] = useState<string | null>(todayLog.dinner_meal || null);
+  const [localTravel, setLocalTravel] = useState(
+    todayLog.travel_km !== undefined && todayLog.travel_km !== null ? String(todayLog.travel_km) : ''
+  );
+  const [localShopping, setLocalShopping] = useState(
+    todayLog.shopping_amount !== undefined && todayLog.shopping_amount !== null ? String(todayLog.shopping_amount) : ''
+  );
+  const [isConcluding, setIsConcluding] = useState(false);
+  const [activeTravelSaved, setActiveTravelSaved] = useState(
+    todayLog.travel_km !== undefined && todayLog.travel_km !== null
+  );
+  const [activeShoppingSaved, setActiveShoppingSaved] = useState(
+    todayLog.shopping_amount !== undefined && todayLog.shopping_amount !== null
+  );
 
   const handleLogActivity = (type: string, val: any) => {
     if (type === 'breakfast') setLocalBreakfast(val);
@@ -246,7 +231,7 @@ export default function DashboardScreen({ onTriggerCheckin, onNavigateToLog }: D
       <ThemedView type="backgroundElement" style={styles.todayCard}>
         <View style={{ width: '100%', gap: Spacing.two }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <ThemedText type="smallBold">📅 Today's Carbon Logs</ThemedText>
+            <ThemedText type="smallBold">{"📅 Today's Carbon Logs"}</ThemedText>
             {checkinDoneToday ? (
               <ThemedView type="backgroundSelected" style={styles.concludedBadge}>
                 <ThemedText type="smallBold" style={{ color: '#2e7d32', fontSize: 10 }}>🔒 Finalized</ThemedText>
@@ -366,14 +351,14 @@ export default function DashboardScreen({ onTriggerCheckin, onNavigateToLog }: D
                 <ActivityIndicator color="#fff" size="small" />
               ) : (
                 <ThemedText style={styles.concludeBtnTxt}>
-                  ✓ Conclude Today's Log (+50 points)
+                  {"✓ Conclude Today's Log (+50 points)"}
                 </ThemedText>
               )}
             </Pressable>
           ) : (
             <View style={styles.concludedBanner}>
               <ThemedText style={{ color: '#1b5e20', fontSize: 12, fontWeight: '700', textAlign: 'center' }}>
-                🎉 Concluded! Today's logs are finalized. Earned +50 EcoPoints!
+                {"🎉 Concluded! Today's logs are finalized. Earned +50 EcoPoints!"}
               </ThemedText>
             </View>
           )}

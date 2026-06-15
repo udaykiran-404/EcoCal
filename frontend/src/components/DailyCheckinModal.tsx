@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Modal, StyleSheet, View, Pressable, ActivityIndicator, ScrollView, TextInput } from 'react-native';
 import { useApp } from '../context/AppContext';
 import { ThemedText } from './themed-text';
@@ -23,34 +23,15 @@ export default function DailyCheckinModal({ visible, onClose }: DailyCheckinModa
   const [ateMoreMeat, setAteMoreMeat] = useState(false);
   const [boughtSomething, setBoughtSomething] = useState(false);
   const [higherElectricity, setHigherElectricity] = useState(false);
-  const [isTypicalDay, setIsTypicalDay] = useState(true);
   const [customNotes, setCustomNotes] = useState('');
 
-  // Reset states on visible change
-  useEffect(() => {
-    if (visible) {
-      setTravelledMore(false);
-      setAteMoreMeat(false);
-      setBoughtSomething(false);
-      setHigherElectricity(false);
-      setIsTypicalDay(true);
-      setCustomNotes('');
-    }
-  }, [visible]);
-
-  // Automatically unset isTypicalDay if any individual yes is checked
-  useEffect(() => {
-    if (travelledMore || ateMoreMeat || boughtSomething || higherElectricity) {
-      setIsTypicalDay(false);
-    }
-  }, [travelledMore, ateMoreMeat, boughtSomething, higherElectricity]);
+  const isTypicalDay = !(travelledMore || ateMoreMeat || boughtSomething || higherElectricity);
 
   const handleTypicalDaySelect = () => {
     setTravelledMore(false);
     setAteMoreMeat(false);
     setBoughtSomething(false);
     setHigherElectricity(false);
-    setIsTypicalDay(true);
   };
 
   const handleSave = async () => {
@@ -121,7 +102,7 @@ export default function DailyCheckinModal({ visible, onClose }: DailyCheckinModa
                   Just a typical day
                 </ThemedText>
                 <ThemedText type="small" themeColor="textSecondary" style={{ fontSize: 12 }}>
-                  Answers "No" to all adjustments in a single tap
+                  {"Answers \"No\" to all adjustments in a single tap"}
                 </ThemedText>
               </View>
             </Pressable>

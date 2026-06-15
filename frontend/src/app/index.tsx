@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, ActivityIndicator, View } from 'react-native';
+import { StyleSheet, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 
@@ -12,7 +12,7 @@ import DashboardScreen from '@/components/DashboardScreen';
 import DailyCheckinModal from '@/components/DailyCheckinModal'; // Will build in Sprint 3
 
 export default function HomeScreen() {
-  const { isAuthenticated, hasProfile, isLoading } = useApp();
+  const { isAuthenticated, hasProfile, isLoading, dashboardData } = useApp();
   const router = useRouter();
   const [checkinModalVisible, setCheckinModalVisible] = useState(false);
 
@@ -49,12 +49,14 @@ export default function HomeScreen() {
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <DashboardScreen
+          key={dashboardData?.todayLog ? `${dashboardData.todayLog.log_date}_${dashboardData.todayLog.status || 'open'}` : 'empty'}
           onTriggerCheckin={() => setCheckinModalVisible(true)}
           onNavigateToLog={(type) => router.push(`/log?type=${type}`)}
         />
         
         {/* Daily Check-in Modal Sheet */}
         <DailyCheckinModal
+          key={checkinModalVisible ? 'open' : 'closed'}
           visible={checkinModalVisible}
           onClose={() => setCheckinModalVisible(false)}
         />

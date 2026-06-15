@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, ActivityIndicator, TextInput, ScrollView, Platform, Image } from 'react-native';
 import { useApp } from '../context/AppContext';
 import { useTheme } from '../hooks/use-theme';
@@ -21,12 +21,6 @@ export default function CaptureFlow({ initialType = 'food', onComplete }: Captur
   const [isLoading, setIsLoading] = useState(false);
   const [captureId, setCaptureId] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-  // Sync activeTab when initialType changes
-  useEffect(() => {
-    setActiveTab(initialType);
-    resetFlow();
-  }, [initialType]);
 
   const pickImage = async () => {
     if (Platform.OS === 'web') {
@@ -52,7 +46,7 @@ export default function CaptureFlow({ initialType = 'food', onComplete }: Captur
   // AI Extracted Draft States
   const [draftFood, setDraftFood] = useState({ meal_category: 'vegetarian', main_items: [] as string[], portion_size: 'medium' });
   const [draftBill, setDraftBill] = useState({ billing_period_days: '30', units_consumed_kwh: '150' });
-  const [draftReceipt, setDraftReceipt] = useState({ items: [] as Array<{ name: string, category: string, amount: string }>, total_amount: '' });
+  const [draftReceipt, setDraftReceipt] = useState({ items: [] as { name: string, category: string, amount: string }[], total_amount: '' });
 
   // Manual fallback fields (shown when skip-photo is tapped or unreadable is triggered)
   const [isManualMode, setIsManualMode] = useState(false);

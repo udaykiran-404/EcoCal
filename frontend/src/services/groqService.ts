@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import { EMISSION_FACTORS } from '../constants/emissionFactors';
 
 const GROQ_API_KEY = process.env.EXPO_PUBLIC_GROQ_API_KEY || '';
