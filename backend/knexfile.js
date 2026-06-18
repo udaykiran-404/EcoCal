@@ -20,6 +20,24 @@ module.exports = {
       }
     }
   },
+  test: {
+    client: 'sqlite3',
+    connection: {
+      filename: './src/database/ecopilot_test.sqlite'
+    },
+    useNullAsDefault: true,
+    migrations: {
+      directory: './src/database/migrations'
+    },
+    seeds: {
+      directory: './src/database/seeds'
+    },
+    pool: {
+      afterCreate: (conn, cb) => {
+        conn.run('PRAGMA foreign_keys = ON', cb);
+      }
+    }
+  },
   production: {
     client: 'pg',
     connection: process.env.DATABASE_URL,

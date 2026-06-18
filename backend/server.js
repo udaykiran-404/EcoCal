@@ -50,7 +50,7 @@ app.use((err, req, res, next) => {
 
 // Programmatic DB Migration & Seeding on Startup
 console.log('[DB] Checking migrations and seeds...');
-db.migrate.latest()
+const dbReady = db.migrate.latest()
   .then(() => {
     console.log('[DB] Migrations applied.');
     return db.seed.run();
@@ -58,11 +58,18 @@ db.migrate.latest()
   .then(() => {
     console.log('[DB] Seeding emission factors completed successfully.');
     // Start listening once DB is configured
-    app.listen(PORT, () => {
-      console.log(`[SERVER] EcoPilot backend running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode.`);
-    });
+    if (require.main === module) {
+      app.listen(PORT, () => {
+        console.log(`[SERVER] EcoPilot backend running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode.`);
+      });
+    }
   })
   .catch(err => {
     console.error('[DB ERROR] Database initialization failed. Server could not start.', err);
-    process.exit(1);
+    if (require.main === module) {
+      process.exit(1);
+    }
   });
+
+app.dbReady = dbReady;
+module.exports = app;
