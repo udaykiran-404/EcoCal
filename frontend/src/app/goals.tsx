@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, View, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ScrollView, Pressable, ActivityIndicator, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '@/context/AppContext';
 import { useTheme } from '@/hooks/use-theme';
@@ -428,11 +428,12 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: Spacing.four,
+    paddingTop: Platform.OS === 'web' ? 90 : Spacing.four,
     gap: Spacing.four,
     maxWidth: 600,
     alignSelf: 'center',
     width: '100%',
-    paddingBottom: Spacing.six,
+    paddingBottom: Platform.OS === 'web' ? Spacing.four : Spacing.six,
   },
   header: {
     marginTop: Spacing.two,

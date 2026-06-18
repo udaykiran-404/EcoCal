@@ -68,7 +68,7 @@ export function CustomTabList(props: TabListProps) {
       {...props} 
       style={[
         styles.tabListContainer, 
-        { backgroundColor: containerBg, borderTopColor: borderCol },
+        { backgroundColor: containerBg, borderBottomColor: borderCol },
         !showTabs && { display: 'none' }
       ]}
     >
@@ -86,7 +86,7 @@ export function CustomTabList(props: TabListProps) {
 const styles = StyleSheet.create({
   tabListContainer: {
     position: 'absolute',
-    bottom: 0,
+    top: 0,
     left: 0,
     right: 0,
     padding: Spacing.three,
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     zIndex: 100,
-    borderTopWidth: 1,
+    borderBottomWidth: 1,
     ...Platform.select({
       web: {
         backdropFilter: 'blur(20px)',

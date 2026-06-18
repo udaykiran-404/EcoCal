@@ -610,6 +610,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: Spacing.four,
+    paddingTop: Platform.OS === 'web' ? 90 : Spacing.four,
     gap: Spacing.four,
     maxWidth: 500,
     alignSelf: 'center',

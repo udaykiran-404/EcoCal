@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Pressable, ActivityIndicator, TextInput } from 'react-native';
+import { View, StyleSheet, ScrollView, Pressable, ActivityIndicator, TextInput, Platform } from 'react-native';
 import { useApp } from '../context/AppContext';
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
@@ -451,11 +451,12 @@ export default function DashboardScreen({ onTriggerCheckin, onNavigateToLog }: D
 const styles = StyleSheet.create({
   container: {
     padding: Spacing.four,
+    paddingTop: Platform.OS === 'web' ? 90 : Spacing.four,
     gap: Spacing.three,
     maxWidth: 600,
     alignSelf: 'center',
     width: '100%',
-    paddingBottom: Spacing.six,
+    paddingBottom: Platform.OS === 'web' ? Spacing.four : Spacing.six,
   },
   loaderContainer: {
     flex: 1,
